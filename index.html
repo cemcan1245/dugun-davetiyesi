@@ -295,15 +295,15 @@
     .mc { border: 1px solid var(--g4); }
     .mc-hd { padding: 22px 24px 18px; }
     .mc-tag {
-      font-size: .48rem; letter-spacing: .5em;
-      text-transform: uppercase; color: var(--g3); margin-bottom: 8px;
+      font-size: .7rem; letter-spacing: .4em;
+      text-transform: uppercase; color: var(--g3); margin-bottom: 10px;
     }
     .mc-name {
       font-family: 'Playfair Display', serif;
-      font-size: 1.25rem; font-style: italic;
+      font-size: 1.55rem; font-style: italic;
       color: var(--g);
     }
-    .mc-addr { font-size: .65rem; color: var(--g2); margin-top: 5px; line-height: 1.7; }
+    .mc-addr { font-size: .88rem; color: var(--g2); margin-top: 7px; line-height: 1.8; }
     .mc-map {
       width: 100%; height: 185px; border: none; display: block;
       border-top: 1px solid var(--g4);
@@ -338,6 +338,33 @@
     /* reveal */
     .r { opacity:0; transform:translateY(20px); transition:opacity .9s,transform .9s; }
     .r.v { opacity:1; transform:none; }
+
+    /* ── MÜZİK BUTONU ── */
+    .music-btn {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: var(--g);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,.15);
+      z-index: 999;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .music-btn:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(0,0,0,.2); }
+    .music-btn svg { width: 20px; height: 20px; color: #fff; }
+    .music-label {
+      position: fixed;
+      bottom: 88px; right: 28px;
+      font-size: .55rem; letter-spacing: .25em;
+      text-transform: uppercase; color: var(--g3);
+      text-align: center; width: 52px;
+      opacity: 0; transition: opacity .3s;
+      pointer-events: none;
+    }
+    .music-btn:hover + .music-label,
+    .music-label.show { opacity: 1; }
   </style>
 </head>
 <body>
@@ -428,7 +455,7 @@
         <p class="ev-month">Eylül · 2026 · Pazar</p>
         <h3 class="ev-title">Düğün</h3>
         <div class="ev-detail">
-          <strong>Kavaklar Düğün Salonu</strong>
+          <strong>Kavaklık Düğün Salonu</strong>
           Gazipaşa, Antalya<br>Saat 19:00
         </div>
       </div>
@@ -453,13 +480,13 @@
       <div class="mc">
         <div class="mc-hd">
           <p class="mc-tag">Düğün · 6 Eylül 2026</p>
-          <p class="mc-name">Kavaklar Düğün Salonu</p>
+          <p class="mc-name">Kavaklık Düğün Salonu</p>
           <p class="mc-addr">Gazipaşa, Antalya</p>
         </div>
         <iframe class="mc-map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-          src="https://www.google.com/maps/embed/v1/search?key=AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY&q=Kavaklar+Dugun+Salonu+Gazipasa+Antalya"
+          src="https://www.google.com/maps/embed/v1/search?key=AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY&q=Kavaklık+Düğün+Salonu+Gazipaşa+Antalya"
           allowfullscreen></iframe>
-        <a class="mc-btn" href="https://maps.google.com/?q=Kavaklar+Dugun+Salonu+Gazipasa+Antalya" target="_blank" rel="noopener">
+        <a class="mc-btn" href="https://maps.app.goo.gl/CVQ4KRt2F71NFJoe7" target="_blank" rel="noopener">
           Yol Tarifi Al →
         </a>
       </div>
@@ -490,6 +517,17 @@
     <p class="cd-sub" id="cdlbl">Nikah Törenine kalan süre</p>
   </div>
 </section>
+
+<!-- ════════ MÜZİK ════════ -->
+<iframe id="yt" width="0" height="0" style="position:absolute;pointer-events:none;opacity:0"
+  src="https://www.youtube.com/embed/LPG_WUgHbis?autoplay=0&loop=1&playlist=LPG_WUgHbis&enablejsapi=1"
+  allow="autoplay" frameborder="0"></iframe>
+
+<button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="Müzik">
+  <svg id="iconPlay" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+  <svg id="iconPause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+</button>
+<div class="music-label" id="musicLabel">Müzik</div>
 
 <!-- ════════ FOOTER ════════ -->
 <footer>
@@ -524,10 +562,31 @@
   }
   tick(); setInterval(tick,1000);
 
-  new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('v'); }), {threshold:.1})
-    .observe = (el => el); // patch below
   const obs = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('v'); }), {threshold:.1});
   document.querySelectorAll('.r').forEach(el => obs.observe(el));
+
+  /* ── MÜZİK ── */
+  let playing = false;
+  const yt = document.getElementById('yt');
+  const label = document.getElementById('musicLabel');
+
+  function toggleMusic() {
+    if (!playing) {
+      yt.src = yt.src.replace('autoplay=0', 'autoplay=1');
+      document.getElementById('iconPlay').style.display = 'none';
+      document.getElementById('iconPause').style.display = 'block';
+      label.textContent = 'Duraklat';
+      label.classList.add('show');
+      playing = true;
+    } else {
+      yt.src = yt.src.replace('autoplay=1', 'autoplay=0');
+      document.getElementById('iconPause').style.display = 'none';
+      document.getElementById('iconPlay').style.display = 'block';
+      label.textContent = 'Müzik';
+      playing = false;
+    }
+    setTimeout(() => label.classList.remove('show'), 1800);
+  }
 </script>
 </body>
 </html>
