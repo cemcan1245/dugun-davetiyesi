@@ -94,25 +94,23 @@
     .hero-name.second { animation-delay: .12s; }
 
     .hero-parents {
-      display: flex;
-      justify-content: center;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
       align-items: center;
-      gap: 32px;
+      gap: 16px;
       margin-top: 20px;
-      flex-wrap: wrap;
-      width: 100%;
+      width: min(520px, 90vw);
       animation: up .9s .2s both;
     }
     .hero-parents p {
-      font-size: .88rem;
-      letter-spacing: .18em;
+      font-size: .82rem;
+      letter-spacing: .15em;
       text-transform: uppercase;
       color: var(--g3);
       text-align: center;
       line-height: 1.7;
-      flex: 0 0 auto;
     }
-    .hero-parents .sep { color: var(--g4); font-size: 1rem; flex: 0 0 auto; }
+    .hero-parents .sep { color: var(--g4); font-size: 1rem; text-align: center; }
 
     .hero-date-strip {
       display: flex;
@@ -199,15 +197,19 @@
       grid-template-columns: 1fr 1px 1fr;
       gap: 0;
       margin-top: 64px;
+      align-items: start;
     }
     @media(max-width:600px){
       .ev-grid { grid-template-columns: 1fr; }
       .ev-line { display: none; }
-      .ev-card + .ev-card { border-top: 1px solid var(--g4); margin-top: 48px; padding-top: 48px; }
     }
 
-    .ev-card { padding: 0 40px; text-align: center; }
+    .ev-col { display: flex; flex-direction: column; }
+    .ev-card { padding: 0 32px; text-align: center; }
     .ev-line { background: var(--g4); }
+    @media(max-width:600px){
+      .ev-col + .ev-col { margin-top: 56px; }
+    }
 
     .ev-num {
       font-family: 'Playfair Display', serif;
@@ -444,57 +446,46 @@
     <h2 class="title">Kutlama Programı</h2>
 
     <div class="ev-grid">
-      <div class="ev-card">
-        <p class="ev-num">19</p>
-        <p class="ev-month">Temmuz · 2026 · Pazar</p>
-        <h3 class="ev-title">Nikah</h3>
-        <div class="ev-detail">
-          <strong>Esenler Belediyesi Evlendirme Dairesi</strong>
-          Esenler, İstanbul<br>Saat 12:20
+      <div class="ev-col">
+        <div class="ev-card">
+          <p class="ev-num">19</p>
+          <p class="ev-month">Temmuz · 2026 · Pazar</p>
+          <h3 class="ev-title">Nikah</h3>
+          <div class="ev-detail">
+            <strong>Esenler Belediyesi Evlendirme Dairesi</strong>
+            Esenler, İstanbul<br>Saat 12:20
+          </div>
+        </div>
+        <div class="mc" style="margin-top:28px">
+          <iframe class="mc-map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            src="https://maps.google.com/maps?q=Esenler+Belediyesi+Evlendirme+Dairesi+Esenler+Istanbul&output=embed&z=16&hl=tr"
+            allowfullscreen></iframe>
+          <a class="mc-btn" href="https://maps.google.com/?q=Esenler+Belediyesi+Evlendirme+Dairesi+Istanbul" target="_blank" rel="noopener">
+            Yol Tarifi Al →
+          </a>
         </div>
       </div>
 
       <div class="ev-line"></div>
 
-      <div class="ev-card">
-        <p class="ev-num">06</p>
-        <p class="ev-month">Eylül · 2026 · Pazar</p>
-        <h3 class="ev-title">Düğün</h3>
-        <div class="ev-detail">
-          <strong>Kavaklık Düğün Salonu</strong>
-          Gazipaşa, Antalya<br>Saat 19:30
+      <div class="ev-col">
+        <div class="ev-card">
+          <p class="ev-num">06</p>
+          <p class="ev-month">Eylül · 2026 · Pazar</p>
+          <h3 class="ev-title">Düğün</h3>
+          <div class="ev-detail">
+            <strong>Kavaklık Düğün Salonu</strong>
+            Gazipaşa, Antalya<br>Saat 19:30
+          </div>
         </div>
-      </div>
-    </div>
-
-    <!-- Mekan bilgileri -->
-    <div class="maps-row" style="margin-top:48px">
-      <div class="mc">
-        <div class="mc-hd">
-          <p class="mc-tag">Nikah · 19 Temmuz 2026</p>
-          <p class="mc-name">Esenler Belediyesi Evlendirme Dairesi</p>
-          <p class="mc-addr">Esenler, İstanbul</p>
+        <div class="mc" style="margin-top:28px">
+          <iframe class="mc-map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            src="https://maps.google.com/maps?q=Kavaklık+Düğün+Salonu+Gazipaşa+Antalya&output=embed&z=16&hl=tr"
+            allowfullscreen></iframe>
+          <a class="mc-btn" href="https://maps.app.goo.gl/CVQ4KRt2F71NFJoe7" target="_blank" rel="noopener">
+            Yol Tarifi Al →
+          </a>
         </div>
-        <iframe class="mc-map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-          src="https://maps.google.com/maps?q=Esenler+Belediyesi+Evlendirme+Dairesi+Esenler+Istanbul&output=embed&z=16&hl=tr"
-          allowfullscreen></iframe>
-        <a class="mc-btn" href="https://maps.google.com/?q=Esenler+Belediyesi+Evlendirme+Dairesi+Istanbul" target="_blank" rel="noopener">
-          Yol Tarifi Al →
-        </a>
-      </div>
-
-      <div class="mc">
-        <div class="mc-hd">
-          <p class="mc-tag">Düğün · 6 Eylül 2026</p>
-          <p class="mc-name">Kavaklık Düğün Salonu</p>
-          <p class="mc-addr">Gazipaşa, Antalya</p>
-        </div>
-        <iframe class="mc-map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-          src="https://maps.google.com/maps?q=Kavaklık+Düğün+Salonu+Gazipaşa+Antalya&output=embed&z=16&hl=tr"
-          allowfullscreen></iframe>
-        <a class="mc-btn" href="https://maps.app.goo.gl/CVQ4KRt2F71NFJoe7" target="_blank" rel="noopener">
-          Yol Tarifi Al →
-        </a>
       </div>
     </div>
   </div>
@@ -569,25 +560,35 @@
   const obs = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('v'); }), {threshold:.1});
   document.querySelectorAll('.r').forEach(el => obs.observe(el));
 
-  /* ── MÜZİK (YouTube IFrame API — mobilde çalışır) ── */
+  /* ── MÜZİK ── */
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   let playing = false;
   let ytPlayer = null;
   const label = document.getElementById('musicLabel');
 
-  const tag = document.createElement('script');
-  tag.src = 'https://www.youtube.com/iframe_api';
-  document.head.appendChild(tag);
+  if (!isMobile) {
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+  }
 
   function onYouTubeIframeAPIReady() {
     ytPlayer = new YT.Player('yt-player', {
-      width: '0', height: '0',
+      width: '200', height: '200',
       videoId: 'LPG_WUgHbis',
-      playerVars: { loop: 1, playlist: 'LPG_WUgHbis', controls: 0 },
+      playerVars: { loop: 1, playlist: 'LPG_WUgHbis', controls: 0, playsinline: 1 },
     });
   }
 
   function toggleMusic() {
-    if (!ytPlayer) return;
+    if (isMobile) {
+      window.open('https://www.youtube.com/watch?v=LPG_WUgHbis', '_blank');
+      label.textContent = 'YouTube\'da Açıldı';
+      label.classList.add('show');
+      setTimeout(() => label.classList.remove('show'), 2000);
+      return;
+    }
+    if (!ytPlayer || typeof ytPlayer.playVideo !== 'function') return;
     if (!playing) {
       ytPlayer.playVideo();
       document.getElementById('iconPlay').style.display = 'none';
