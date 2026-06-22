@@ -551,22 +551,39 @@
   const label = document.getElementById('musicLabel');
   let playing = false;
   let scrollTimer = null;
+  let touchStartY = 0;
 
-  function autoScroll() {
+  function scrollStep() {
+    document.documentElement.scrollTop += 1;
+    document.body.scrollTop += 1;
+  }
+
+  function startScroll() {
     stopScroll();
-    scrollTimer = setInterval(() => { window.scrollBy(0, 1); }, 16);
+    scrollTimer = setInterval(scrollStep, 20);
   }
 
   function stopScroll() {
     if (scrollTimer) { clearInterval(scrollTimer); scrollTimer = null; }
   }
 
+  /* masaüstü: mouse tekerleği durdurur */
   window.addEventListener('wheel', stopScroll, { passive: true });
+
+  /* mobil: parmak kaydırma durdurur */
+  window.addEventListener('touchstart', e => {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  window.addEventListener('touchend', e => {
+    const diff = Math.abs(e.changedTouches[0].clientY - touchStartY);
+    if (diff > 8) stopScroll();
+  }, { passive: true });
 
   function toggleMusic() {
     if (!playing) {
       audio.play();
-      autoScroll();
+      startScroll();
       document.getElementById('iconPlay').style.display = 'none';
       document.getElementById('iconPause').style.display = 'block';
       label.innerHTML = 'Duraklat';
