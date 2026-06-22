@@ -516,7 +516,7 @@
 </section>
 
 <!-- ════════ MÜZİK ════════ -->
-<div id="yt-player" style="position:absolute;width:0;height:0;overflow:hidden;pointer-events:none"></div>
+<audio id="audio" loop src="waltz.mp3" preload="none"></audio>
 
 <button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="Müzik">
   <svg id="iconPlay" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
@@ -561,42 +561,19 @@
   document.querySelectorAll('.r').forEach(el => obs.observe(el));
 
   /* ── MÜZİK ── */
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  let playing = false;
-  let ytPlayer = null;
+  const audio = document.getElementById('audio');
   const label = document.getElementById('musicLabel');
-
-  if (!isMobile) {
-    const tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    document.head.appendChild(tag);
-  }
-
-  function onYouTubeIframeAPIReady() {
-    ytPlayer = new YT.Player('yt-player', {
-      width: '200', height: '200',
-      videoId: 'LPG_WUgHbis',
-      playerVars: { loop: 1, playlist: 'LPG_WUgHbis', controls: 0, playsinline: 1 },
-    });
-  }
+  let playing = false;
 
   function toggleMusic() {
-    if (isMobile) {
-      window.open('https://www.youtube.com/watch?v=LPG_WUgHbis', '_blank');
-      label.textContent = 'YouTube\'da Açıldı';
-      label.classList.add('show');
-      setTimeout(() => label.classList.remove('show'), 2000);
-      return;
-    }
-    if (!ytPlayer || typeof ytPlayer.playVideo !== 'function') return;
     if (!playing) {
-      ytPlayer.playVideo();
+      audio.play();
       document.getElementById('iconPlay').style.display = 'none';
       document.getElementById('iconPause').style.display = 'block';
       label.textContent = 'Duraklat';
       playing = true;
     } else {
-      ytPlayer.pauseVideo();
+      audio.pause();
       document.getElementById('iconPause').style.display = 'none';
       document.getElementById('iconPlay').style.display = 'block';
       label.textContent = 'Müzik';
