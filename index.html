@@ -117,7 +117,7 @@
       align-items: center;
       justify-content: center;
       gap: 24px;
-      margin-top: 32px;
+      margin: 32px auto 0;
       animation: up .9s .35s both;
       width: min(480px, 92vw);
     }
@@ -550,19 +550,18 @@
   const audio = document.getElementById('audio');
   const label = document.getElementById('musicLabel');
   let playing = false;
-  let scrollRaf = null;
+  let scrollTimer = null;
 
   function autoScroll() {
-    window.scrollBy(0, 0.7);
-    scrollRaf = requestAnimationFrame(autoScroll);
+    stopScroll();
+    scrollTimer = setInterval(() => { window.scrollBy(0, 1); }, 16);
   }
 
   function stopScroll() {
-    if (scrollRaf) { cancelAnimationFrame(scrollRaf); scrollRaf = null; }
+    if (scrollTimer) { clearInterval(scrollTimer); scrollTimer = null; }
   }
 
   window.addEventListener('wheel', stopScroll, { passive: true });
-  window.addEventListener('touchmove', stopScroll, { passive: true });
 
   function toggleMusic() {
     if (!playing) {
