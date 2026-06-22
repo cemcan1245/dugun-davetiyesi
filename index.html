@@ -550,34 +550,33 @@
   const audio = document.getElementById('audio');
   const label = document.getElementById('musicLabel');
   let playing = false;
-  let scrollTimer = null;
+  let rafId = null;
+  let scrollPos = 0;
   let touchStartY = 0;
-
-  function scrollStep() {
-    const y = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-    window.scrollTo(0, y + 1);
-  }
 
   function startScroll() {
     stopScroll();
-    scrollTimer = setInterval(scrollStep, 20);
+    scrollPos = window.pageYOffset || 0;
+    function step() {
+      scrollPos += 0.8;
+      window.scrollTo(0, scrollPos);
+      rafId = requestAnimationFrame(step);
+    }
+    rafId = requestAnimationFrame(step);
   }
 
   function stopScroll() {
-    if (scrollTimer) { clearInterval(scrollTimer); scrollTimer = null; }
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
   }
 
-  /* masaüstü: mouse tekerleği durdurur */
   window.addEventListener('wheel', stopScroll, { passive: true });
 
-  /* mobil: parmak kaydırma durdurur */
   window.addEventListener('touchstart', e => {
     touchStartY = e.touches[0].clientY;
   }, { passive: true });
 
   window.addEventListener('touchend', e => {
-    const diff = Math.abs(e.changedTouches[0].clientY - touchStartY);
-    if (diff > 8) stopScroll();
+    if (Math.abs(e.changedTouches[0].clientY - touchStartY) > 8) stopScroll();
   }, { passive: true });
 
   function toggleMusic() {
