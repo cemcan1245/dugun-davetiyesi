@@ -546,34 +546,38 @@
   const obs = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('v'); }), {threshold:.1});
   document.querySelectorAll('.r').forEach(el => obs.observe(el));
 
-  /* ── MÜZİK ── */
+  /* ── MÜZİK & OTO KAYDIR ── */
   const audio = document.getElementById('audio');
   const label = document.getElementById('musicLabel');
   let playing = false;
-  let firstClick = true;
+  let scrollRaf = null;
+
+  function autoScroll() {
+    window.scrollBy(0, 0.7);
+    scrollRaf = requestAnimationFrame(autoScroll);
+  }
+
+  function stopScroll() {
+    if (scrollRaf) { cancelAnimationFrame(scrollRaf); scrollRaf = null; }
+  }
+
+  window.addEventListener('wheel', stopScroll, { passive: true });
+  window.addEventListener('touchmove', stopScroll, { passive: true });
 
   function toggleMusic() {
-    if (firstClick) {
-      firstClick = false;
-      document.querySelector('section').scrollIntoView({ behavior: 'smooth' });
-      audio.play();
-      document.getElementById('iconPlay').style.display = 'none';
-      document.getElementById('iconPause').style.display = 'block';
-      label.innerHTML = 'Duraklat';
-      playing = true;
-      return;
-    }
     if (!playing) {
       audio.play();
+      autoScroll();
       document.getElementById('iconPlay').style.display = 'none';
       document.getElementById('iconPause').style.display = 'block';
       label.innerHTML = 'Duraklat';
       playing = true;
     } else {
       audio.pause();
+      stopScroll();
       document.getElementById('iconPause').style.display = 'none';
       document.getElementById('iconPlay').style.display = 'block';
-      label.innerHTML = 'Oynat';
+      label.innerHTML = 'Tıkla ve<br>Kaydır';
       playing = false;
     }
   }
