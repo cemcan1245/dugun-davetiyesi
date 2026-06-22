@@ -96,9 +96,11 @@
     .hero-parents {
       display: flex;
       justify-content: center;
-      gap: 40px;
+      align-items: center;
+      gap: 32px;
       margin-top: 20px;
       flex-wrap: wrap;
+      width: 100%;
       animation: up .9s .2s both;
     }
     .hero-parents p {
@@ -108,8 +110,9 @@
       color: var(--g3);
       text-align: center;
       line-height: 1.7;
+      flex: 0 0 auto;
     }
-    .hero-parents .sep { color: var(--g4); align-self: center; font-size: 1rem; }
+    .hero-parents .sep { color: var(--g4); font-size: 1rem; flex: 0 0 auto; }
 
     .hero-date-strip {
       display: flex;
@@ -473,7 +476,7 @@
           <p class="mc-addr">Esenler, İstanbul</p>
         </div>
         <iframe class="mc-map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-          src="https://www.google.com/maps/embed/v1/search?key=AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY&q=Esenler+Belediyesi+Evlendirme+Dairesi,+Istanbul"
+          src="https://maps.google.com/maps?q=Esenler+Belediyesi+Evlendirme+Dairesi+Esenler+Istanbul&output=embed&z=16&hl=tr"
           allowfullscreen></iframe>
         <a class="mc-btn" href="https://maps.google.com/?q=Esenler+Belediyesi+Evlendirme+Dairesi+Istanbul" target="_blank" rel="noopener">
           Yol Tarifi Al →
@@ -487,7 +490,7 @@
           <p class="mc-addr">Gazipaşa, Antalya</p>
         </div>
         <iframe class="mc-map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-          src="https://www.google.com/maps/embed/v1/search?key=AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY&q=Kavaklık+Düğün+Salonu+Gazipaşa+Antalya"
+          src="https://maps.google.com/maps?q=Kavaklık+Düğün+Salonu+Gazipaşa+Antalya&output=embed&z=16&hl=tr"
           allowfullscreen></iframe>
         <a class="mc-btn" href="https://maps.app.goo.gl/CVQ4KRt2F71NFJoe7" target="_blank" rel="noopener">
           Yol Tarifi Al →
@@ -522,9 +525,7 @@
 </section>
 
 <!-- ════════ MÜZİK ════════ -->
-<iframe id="yt" width="0" height="0" style="position:absolute;pointer-events:none;opacity:0"
-  src="https://www.youtube.com/embed/LPG_WUgHbis?autoplay=0&loop=1&playlist=LPG_WUgHbis&enablejsapi=1"
-  allow="autoplay" frameborder="0"></iframe>
+<div id="yt-player" style="position:absolute;width:0;height:0;overflow:hidden;pointer-events:none"></div>
 
 <button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="Müzik">
   <svg id="iconPlay" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
@@ -568,26 +569,39 @@
   const obs = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('v'); }), {threshold:.1});
   document.querySelectorAll('.r').forEach(el => obs.observe(el));
 
-  /* ── MÜZİK ── */
+  /* ── MÜZİK (YouTube IFrame API — mobilde çalışır) ── */
   let playing = false;
-  const yt = document.getElementById('yt');
+  let ytPlayer = null;
   const label = document.getElementById('musicLabel');
 
+  const tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
+
+  function onYouTubeIframeAPIReady() {
+    ytPlayer = new YT.Player('yt-player', {
+      width: '0', height: '0',
+      videoId: 'LPG_WUgHbis',
+      playerVars: { loop: 1, playlist: 'LPG_WUgHbis', controls: 0 },
+    });
+  }
+
   function toggleMusic() {
+    if (!ytPlayer) return;
     if (!playing) {
-      yt.src = yt.src.replace('autoplay=0', 'autoplay=1');
+      ytPlayer.playVideo();
       document.getElementById('iconPlay').style.display = 'none';
       document.getElementById('iconPause').style.display = 'block';
       label.textContent = 'Duraklat';
-      label.classList.add('show');
       playing = true;
     } else {
-      yt.src = yt.src.replace('autoplay=1', 'autoplay=0');
+      ytPlayer.pauseVideo();
       document.getElementById('iconPause').style.display = 'none';
       document.getElementById('iconPlay').style.display = 'block';
       label.textContent = 'Müzik';
       playing = false;
     }
+    label.classList.add('show');
     setTimeout(() => label.classList.remove('show'), 1800);
   }
 </script>
