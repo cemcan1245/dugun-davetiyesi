@@ -514,7 +514,7 @@
 <footer>
   <p class="ft-name">Nagehan &amp; Cem</p>
   <div class="ft-line"></div>
-  <p class="ft-sub">Sevgiyle hazırlandı · 2026</p>
+  <p class="ft-sub">Sizleri de aramızda görmekten mutluluk duyarız</p>
 </footer>
 
 <script>
@@ -554,8 +554,8 @@
   let touchStartY = 0;
 
   function scrollStep() {
-    document.documentElement.scrollTop += 1;
-    document.body.scrollTop += 1;
+    const y = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    window.scrollTo(0, y + 1);
   }
 
   function startScroll() {
