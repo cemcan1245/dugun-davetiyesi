@@ -204,11 +204,13 @@
       .ev-line { display: none; }
     }
 
-    .ev-col { display: flex; flex-direction: column; }
-    .ev-card { padding: 0 32px; text-align: center; }
+    .ev-col { display: flex; flex-direction: column; min-width: 0; }
+    .ev-card { padding: 0 24px; text-align: center; }
     .ev-line { background: var(--g4); }
     @media(max-width:600px){
       .ev-col + .ev-col { margin-top: 56px; }
+      .ev-card { padding: 0 8px; }
+      .ev-detail { font-size: .82rem; word-break: break-word; }
     }
 
     .ev-num {
@@ -362,14 +364,13 @@
     .music-label {
       position: fixed;
       bottom: 88px; right: 28px;
-      font-size: .55rem; letter-spacing: .25em;
-      text-transform: uppercase; color: var(--g3);
+      font-size: .52rem; letter-spacing: .15em;
+      text-transform: uppercase; color: var(--g2);
       text-align: center; width: 52px;
-      opacity: 0; transition: opacity .3s;
+      line-height: 1.5;
       pointer-events: none;
+      font-weight: 500;
     }
-    .music-btn:hover + .music-label,
-    .music-label.show { opacity: 1; }
   </style>
 </head>
 <body>
@@ -522,7 +523,7 @@
   <svg id="iconPlay" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
   <svg id="iconPause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
 </button>
-<div class="music-label" id="musicLabel">Müzik</div>
+<div class="music-label" id="musicLabel">Tıkla ve<br>Kaydır</div>
 
 <!-- ════════ FOOTER ════════ -->
 <footer>
@@ -564,23 +565,32 @@
   const audio = document.getElementById('audio');
   const label = document.getElementById('musicLabel');
   let playing = false;
+  let firstClick = true;
 
   function toggleMusic() {
+    if (firstClick) {
+      firstClick = false;
+      document.querySelector('section').scrollIntoView({ behavior: 'smooth' });
+      audio.play();
+      document.getElementById('iconPlay').style.display = 'none';
+      document.getElementById('iconPause').style.display = 'block';
+      label.innerHTML = 'Duraklat';
+      playing = true;
+      return;
+    }
     if (!playing) {
       audio.play();
       document.getElementById('iconPlay').style.display = 'none';
       document.getElementById('iconPause').style.display = 'block';
-      label.textContent = 'Duraklat';
+      label.innerHTML = 'Duraklat';
       playing = true;
     } else {
       audio.pause();
       document.getElementById('iconPause').style.display = 'none';
       document.getElementById('iconPlay').style.display = 'block';
-      label.textContent = 'Müzik';
+      label.innerHTML = 'Oynat';
       playing = false;
     }
-    label.classList.add('show');
-    setTimeout(() => label.classList.remove('show'), 1800);
   }
 </script>
 </body>
